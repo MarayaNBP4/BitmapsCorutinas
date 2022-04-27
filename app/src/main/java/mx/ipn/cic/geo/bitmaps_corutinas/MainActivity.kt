@@ -1,15 +1,17 @@
 package mx.ipn.cic.geo.bitmaps_corutinas
 
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import android.widget.ImageView
 import mx.ipn.cic.geo.bitmaps_corutinas.databinding.ActivityMainBinding
 
+
 class MainActivity : AppCompatActivity() {
+
    // Atributo para acceder a los widgets mediante vinculación de vista.
    private lateinit var binding: ActivityMainBinding
+   private lateinit var imageViewBitmap: ImageView
 
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
@@ -17,6 +19,16 @@ class MainActivity : AppCompatActivity() {
       // setContentView(R.layout.activity_main)
       initBindingView()
       initButtonListener()
+      imageViewBitmap = findViewById(R.id.imageView)
+   }
+
+   private fun loadBitmap(): Boolean {
+      val aleatorio = (0..9).random()
+      val resourceId = resources.getIdentifier(
+         "imagen${aleatorio.toString()}", "drawable", packageName)
+      val task = BitmapWorkerTask(imageViewBitmap)
+      task.execute(resourceId)
+      return true
    }
 
    private fun initBindingView() {
@@ -29,13 +41,19 @@ class MainActivity : AppCompatActivity() {
    }
 
    private fun initButtonListener() {
+
       // Recuperar la referencia al widget usando vinculación de vistas.
-      binding.btnCorutina.setOnClickListener {
-         MainScope().launch {
+     binding.btnCorutina.setOnClickListener {
+        loadBitmap()
+     }
+         /*MainScope().launch {
             binding.mensajeCorutina.text = resources.getText(R.string.mensaje_corutina_inicio)
             delay(2000)
             binding.mensajeCorutina.text = resources.getText(R.string.mensaje_corutina_fin)
-         }
-      }
+         }*/
    }
+
+
+
 }
+
